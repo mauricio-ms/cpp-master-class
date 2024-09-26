@@ -1,0 +1,186 @@
+
+* Importing namespaces
+
+#+begin_src c++
+  using namespace std;
+#+end_src
+
+* Cast
+
+#+begin_src c++
+  static_cast<type>(value)
+#+end_src
+
+* Constants
+
+#+begin_src c++
+  const int r10 = 10;
+#+end_src
+
+Constants are more performant than =#define= because the compiler always uses a same memory region, whereas for the =#define= the compiler needs to create a lot of temp variables.
+
+A =const= means the variable cannot be modified in any way, including it's attributes.
+
+* Enums
+
+#+begin_src c++
+  enum class Months : uint8_t {
+    January = 1, // C++ initializes from 0, we can override that
+    February
+    // ...
+  }
+
+  int main() { 
+    Months month = Months::January;
+  }
+#+end_src
+
+* Inline functions
+
+#+begin_src c++
+  inline int maximum(int x, int y) {
+    return x > y ? x : y;
+  }
+#+end_src
+
+* Assembly
+
+[[https://godbolt.org/][GoldBolt]]
+
+* Pointers
+
+- =&x= - Memory address pointed by =x= variable
+- =int *px = &x= - Read memory address pointed by =x= variable
+- =*px= - Read the value pointed by the pointer
+- =nullptr= - Pointer to a null memory address
+
+  Pointers always have a fixed size, independent of the data type it points to - 32-bits architecture it is 4 bytes, 64-bits architecture it is 8 bytes.
+
+* References
+
+Reference is only an alias, this don't create a new memory address. It's faster than pointer because it requires a single access to read data whereas pointers requires two, the syntax to acquire a reference for a variable x is: =int &rx = x;=.
+
+* const class functions
+
+=const= class allows to specify that no class members can be changed by a function:
+
+#+begin_src c++
+  struct Date {
+    void print() const {
+  	// any attempt to change class members will generate a compilation error
+    }
+  }
+#+end_src
+
+* Initialization of members in-class (from C++ 11)
+
+#+begin_src c++
+  struct Date {
+  private:
+    bool _valid = false;
+    // or
+    bool _valid2 {false};
+  }
+#+end_src
+
+* Default constructor
+
+#+begin_src c++
+  struct Date {
+    Date() {}
+    // or, from C++ 11
+    Date() = default; // more efficient, avoid function call on generated code
+  }
+#+end_src
+
+* Struct vs Classes
+
+- =Struct= by default has ~public~ access to it's members
+- =Class= by default has ~private~ access to it's members
+
+* ifndef directive
+
+This directive instructs the compiler to add the code a single time even if imported multiple times:
+
+#+begin_src c++
+  #ifndef DATE_H
+  #define DATE_H
+  // code ...
+  #endif // DATE_H
+#+end_src
+
+A replacement for this, is the pragma directive, however it's not C++ standard, so it depends on compiler support:
+
+#+begin_src c++
+  #pragma once
+  // code ...
+#+end_src
+
+* Continue from 14.exercicio
+
+* Template Metaprogramming
+
+** Initializing a vector
+
+#+begin_src c++
+  int arr[10] {}; // {} will initialize all values with the default value for the type
+#+end_src
+
+** std::array
+
+#+begin_src c++
+  #include <array>
+  std::array<float, 10> arr;
+#+end_src
+
+** Overloading Operators
+
+#+begin_src c++
+  bool operator<(const Date &other) const {
+    return compare(other) < 0;
+  }
+#+end_src
+
+** Handling errors with std::expected
+
+=noexcept= is to indicate that the function doesn't throws exception.
+
+#+begin_src c++
+
+  template <typename T>
+  std::expected<typename T::value_type, std::string>
+  max_element(const T &arr) noexcept {
+    if (arr.isEmpty())
+  	return std::unexpected("Array is empty!");
+
+    auto greaterElement = arr[0];
+    for (size_t i = 1; i < arr.size(); ++i) {
+  	if (arr[i] > greaterElement) {
+  	  greaterElement = arr[i];
+  	}
+    }
+
+    return greaterElement;
+  }
+
+#+end_src
+
+** Bit Fields
+
+Bit Fields allows to specify how many bits an integer should use:
+
+#+begin_src c++
+  class Date{
+    private:
+    bool _valid : 1 {false}; // uses 1 bit
+    uint8_t _day : 7; // uses 7 bits, as day varies from 1 to 31, it's more than sufficient
+    uint8_t _month;
+    uint16_t _year;
+  };
+#+end_src
+
+* Measuring program time
+
+TODO Get from Galuppo class
+
+TODO ADD lscpu and coreinfo commands to the linux notes.

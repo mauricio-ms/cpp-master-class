@@ -1,17 +1,19 @@
 
-* Importing namespaces
+* Base
+
+** Importing namespaces
 
 #+begin_src c++
   using namespace std;
 #+end_src
 
-* Cast
+** Cast
 
 #+begin_src c++
   static_cast<type>(value)
 #+end_src
 
-* Constants
+** Constants
 
 #+begin_src c++
   const int r10 = 10;
@@ -21,7 +23,7 @@ Constants are more performant than =#define= because the compiler always uses a 
 
 A =const= means the variable cannot be modified in any way, including it's attributes.
 
-* Enums
+** Enums
 
 #+begin_src c++
   enum class Months : uint8_t {
@@ -35,7 +37,7 @@ A =const= means the variable cannot be modified in any way, including it's attri
   }
 #+end_src
 
-* Inline functions
+** Inline functions
 
 #+begin_src c++
   inline int maximum(int x, int y) {
@@ -43,11 +45,11 @@ A =const= means the variable cannot be modified in any way, including it's attri
   }
 #+end_src
 
-* Assembly
+** Assembly
 
 [[https://godbolt.org/][GoldBolt]]
 
-* Pointers
+** Pointers
 
 - =&x= - Memory address pointed by =x= variable
 - =int *px = &x= - Read memory address pointed by =x= variable
@@ -56,11 +58,13 @@ A =const= means the variable cannot be modified in any way, including it's attri
 
   Pointers always have a fixed size, independent of the data type it points to - 32-bits architecture it is 4 bytes, 64-bits architecture it is 8 bytes.
 
-* References
+** References
 
 Reference is only an alias, this don't create a new memory address. It's faster than pointer because it requires a single access to read data whereas pointers requires two, the syntax to acquire a reference for a variable x is: =int &rx = x;=.
 
-* const class functions
+* Object Oriented
+
+** const class functions
 
 =const= class allows to specify that no class members can be changed by a function:
 
@@ -72,7 +76,7 @@ Reference is only an alias, this don't create a new memory address. It's faster 
   }
 #+end_src
 
-* Initialization of members in-class (from C++ 11)
+** Initialization of members in-class (from C++ 11)
 
 #+begin_src c++
   struct Date {
@@ -83,7 +87,7 @@ Reference is only an alias, this don't create a new memory address. It's faster 
   }
 #+end_src
 
-* Default constructor
+** Default constructor
 
 #+begin_src c++
   struct Date {
@@ -93,12 +97,12 @@ Reference is only an alias, this don't create a new memory address. It's faster 
   }
 #+end_src
 
-* Struct vs Classes
+** Struct vs Classes
 
 - =Struct= by default has ~public~ access to it's members
 - =Class= by default has ~private~ access to it's members
 
-* ifndef directive
+** ifndef directive
 
 This directive instructs the compiler to add the code a single time even if imported multiple times:
 
@@ -115,8 +119,6 @@ A replacement for this, is the pragma directive, however it's not C++ standard, 
   #pragma once
   // code ...
 #+end_src
-
-* Continue from 14.exercicio
 
 * Template Metaprogramming
 
@@ -179,8 +181,25 @@ Bit Fields allows to specify how many bits an integer should use:
   };
 #+end_src
 
-* Measuring program time
+* System Programming
 
-TODO Get from Galuppo class
+** Measuring program time
+
+#+begin_src c++
+  #include <chrono>
+
+  int main() {
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration;
+    using milliseconds = duration<double, std::milli>;
+
+    const auto t_s = high_resolution_clock::now();
+    // run algorithm to be measured
+    const auto t_e = high_resolution_clock::now();
+    const milliseconds diff = t_e - t_s;
+    std::cout << diff.count() << " ms\n";
+  }
+
+#+end_src
 
 TODO ADD lscpu and coreinfo commands to the linux notes.
